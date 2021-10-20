@@ -20,7 +20,7 @@ deployments:
     - https://github.com/bitnami-labs/sealed-secrets/releases/download/v0.16.0/controller.yaml
 
 profiles:
-- name: dev
+- name: auto-restore
   merge:
     hooks:
       - command: "devspace run restore-sealed-secrets-master-key"
