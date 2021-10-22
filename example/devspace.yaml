@@ -8,9 +8,8 @@ dependencies:
   source:
     path: ../sealed-secrets
 
-profiles:
+commands:
 - name: init
-  patches:
-  - op: add
-    path: dependencies.name=sealed-secrets.profile
-    value: "init"
+  command: |-
+    devspace run k3d.init
+    devspace run sealed-secrets.init
