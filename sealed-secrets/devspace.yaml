@@ -4,12 +4,12 @@ commands:
 - name: backup-sealed-secrets-master-key
   description: Takes a backup of the master key, which can then be shared in the devteam.
   command: |-
-    mkdir -p .devspace
+    mkdir -p ~/.devspace
     kubectl get secret -n kube-system -l sealedsecrets.bitnami.com/sealed-secrets-key -o yaml >~/.devspace/sealed-secrets-master.key
 - name: restore-sealed-secrets-master-key
   description: Inserts the master key into the current cluster.
   command: |-
-    kubectl apply -f ~/.devspace/sealed-secrets-master.key
+    kubectl apply -f ~/.devspace/sealed-secrets-master.key --force
     kubectl delete pod -n kube-system -l name=sealed-secrets-controller
 
 deployments:
