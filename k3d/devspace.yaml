@@ -2,8 +2,7 @@ version: v1beta11
 
 vars:
 - name: K3D_CLUSTER_NAME
-  question: cluster name for k3d
-  default: "devspace"
+  value: "devspace"
 
 commands:
 - name: init
