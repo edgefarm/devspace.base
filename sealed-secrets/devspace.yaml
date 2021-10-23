@@ -18,6 +18,12 @@ commands:
     kubectl apply -f ~/.devspace/sealed-secrets-master.key
     kubectl delete pod -n kube-system -l name=sealed-secrets-controller
 
+hooks:
+
+- command: until kubectl wait --for=condition=available deployment.apps/sealed-secrets-controller -n kube-system --timeout=120s; do sleep 2; done
+  os: darwin,linux
+  events: [ "after:deploy:sealed-secrets" ]
+
 deployments:
 - name: sealed-secrets
   namespace: kube-system
