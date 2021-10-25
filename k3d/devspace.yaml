@@ -5,18 +5,14 @@ vars:
   value: "devspace"
 
 commands:
-- name: init
+- name: activate
   command: |-
-    devspace run reset-cluster
-- name: reset-cluster
-  command: |-
-    devspace run delete-cluster
-    devspace run create-cluster
-- name: delete-cluster
-  command: |-
-    k3d cluster delete ${K3D_CLUSTER_NAME}
-- name: create-cluster
-  command: |-
-    k3d cluster create ${K3D_CLUSTER_NAME} --agents 3
     kubectl config use-context k3d-${K3D_CLUSTER_NAME}
     kubectl config set-context --current --namespace ${K3D_CLUSTER_NAME}
+- name: init
+  command: |-
+    k3d cluster create ${K3D_CLUSTER_NAME} --agents 2
+    devspace run activate
+- name: purge
+  command: |-
+    k3d cluster delete ${K3D_CLUSTER_NAME}
