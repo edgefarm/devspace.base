@@ -14,8 +14,9 @@ These environments can be included in derived devspace environments via
 
 ### Commands
 
-These environments bring, if necessary, a set of standard commands that can
-be used in derived environments via `devspace run <<DEPENDENCY>>.<<COMMAND>>`.
+These environments bring, if necessary, a set of standard
+commands that can be used in derived environments via
+`devspace run <<DEPENDENCY>>.<<COMMAND>>`.
 
 The public commands are documented in the corresponding `README.MD`.
 (Do not use commands prefixed with `internal-`, may changed over time,
@@ -30,11 +31,18 @@ the dependency.
 
 Predefined profiles are documented in the corresponding `README.MD`.
 
+**Profiles actually doesn't work really well for dependencies when using in
+conjunction with variables.**
+
 ## Variables
 
 Environments can define configurable variables that affect the behavior of
 the environment. These can be set via environment variables or via `.env`
-file (but are valid globally, even if the environment is included multiple
-times).
+file (but both are valid globally, even if the environment is included
+multiple times).
 
 Predefined variables are documented in the corresponding `README.MD` file.
+
+**All variables types, except environment-variables actually doesn't work
+really well for dependencies when using in conjunction with profiles
+and/or commands.**

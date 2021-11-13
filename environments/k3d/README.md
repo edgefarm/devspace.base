@@ -5,6 +5,9 @@ Setup and manage k3d cluster instance's for local development.
 * Cluster with predefined or self-defined configuration
 * k3d based container registry to speed-up recreation of environments
 
+Predefined cluster configurations are located in `config`-folder and can be
+used by setting `K3D_CLUSTER_CONFIG`.
+
 ## Deployments
 
 -none-
@@ -37,6 +40,12 @@ default: `devspace-base`
 Filepath to k3d cluster config yaml to use for creation.
 default: `./config/minimal-cluster.yaml`
 
+Attention: Using local path like `./config/minimal-cluster.yaml` points
+to devspace folder of `k3d`, not to the devspace-folder in your environment.
+Currently didn't find a clean way to use folder in derived devspace
+environments. So you need to add new configs into config folder from
+`devspace.base`.
+
 ### `K3D_REGISTRY_NAME`
 
 Filepath to k3d cluster config yaml to use for creation.
@@ -51,12 +60,4 @@ default: `5000`
 
 ## Profiles
 
-### `minimal`
-
-Creates a minimal one node cluster.
-
-### `runtime-nodes`
-
-Creates a cluster with one master and four agents,
-two agents are labeled as edgefarm main-runtime nodes and the others are
-labeled as edgefarm edge-runtime nodes.
+-none-
