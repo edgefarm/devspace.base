@@ -45,13 +45,13 @@ commands:
 
 profiles:
 - name: minimal-cluster
-  replace:
+  merge:
     vars:
     - name: K3D_CONFIG
       source: env
       default: ./config/minimal-cluster.yaml
 - name: edgefarm-runtime-nodes
-  replace:
+  merge:
     vars:
     - name: K3D_CONFIG
       source: env
