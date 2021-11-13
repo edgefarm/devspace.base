@@ -51,11 +51,11 @@ default: `5000`
 
 ## Profiles
 
-### `minimal-cluster`
+### `minimal`
 
 Creates a minimal one node cluster.
 
-### `edgefarm-runtime-nodes`
+### `runtime-nodes`
 
 Creates a cluster with one master and four agents,
 two agents are labeled as edgefarm main-runtime nodes and the others are

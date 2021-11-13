@@ -4,6 +4,7 @@ dependencies:
 - name: k3d
   source:
     path: ./environments/k3d
+  profile: minimal
 - name: sealed-secrets
   source:
     path: ./environments/sealed-secrets

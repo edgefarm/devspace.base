@@ -44,15 +44,33 @@ commands:
       --config ${K3D_CONFIG}
 
 profiles:
-- name: minimal-cluster
+- name: minimal
   merge:
     vars:
+    - name: K3D_CLUSTER_NAME
+      source: env
+      default: devspace-base
     - name: K3D_CONFIG
       source: env
       default: ./config/minimal-cluster.yaml
-- name: edgefarm-runtime-nodes
+    - name: K3D_REGISTRY_NAME
+      source: env
+      default: registry.k3d.localhost
+    - name: K3D_REGISTRY_PORT
+      source: env
+      default: 5000
+- name: runtime-nodes
   merge:
     vars:
+    - name: K3D_CLUSTER_NAME
+      source: env
+      default: devspace-base
     - name: K3D_CONFIG
       source: env
-      default: ./config/edgefarm-runtime-nodes-cluster.yaml
+      default: ./config/runtime-nodes-cluster.yaml
+    - name: K3D_REGISTRY_NAME
+      source: env
+      default: registry.k3d.localhost
+    - name: K3D_REGISTRY_PORT
+      source: env
+      default: 5000
