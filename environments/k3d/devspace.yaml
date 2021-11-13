@@ -1,0 +1,58 @@
+version: v1beta11
+
+vars:
+- name: K3D_CLUSTER_NAME
+  source: env
+  default: devspace-base
+- name: K3D_CONFIG
+  source: env
+  default: ./config/minimal-cluster.yaml
+- name: K3D_REGISTRY_NAME
+  source: env
+  default: registry.k3d.localhost
+- name: K3D_REGISTRY_PORT
+  source: env
+  default: 5000
+
+commands:
+- name: activate
+  description: Configure environment to point to this cluster.
+  command: |-
+    kubectl config use-context k3d-${K3D_CLUSTER_NAME}
+    kubectl config set-context --current --namespace ${K3D_CLUSTER_NAME}
+- name: purge
+  description: Delete cluster resources (except container registry).
+  command: |-
+    k3d cluster delete ${K3D_CLUSTER_NAME}
+- name: init
+  description: Setup registry, custer and activate environment.
+  command: |-
+    devspace run internal-ensure-registry-exists
+    devspace run internal-create-cluster
+    devspace run activate
+- name: internal-ensure-registry-exists
+  description: Create registry, if not exists. (Do not use directly)
+  command: |-
+    k3d registry create ${K3D_REGISTRY_NAME} \
+      --port ${K3D_REGISTRY_PORT} \
+      || true # ignore error's
+- name: internal-create-cluster
+  description: Create registry, if not exists. (Do not use directly)
+  command: |-
+    k3d cluster create ${K3D_CLUSTER_NAME} \
+      --registry-use ${K3D_REGISTRY_NAME}:${K3D_REGISTRY_PORT} \
+      --config ${K3D_CONFIG}
+
+profiles:
+- name: minimal-cluster
+  replace:
+    vars:
+    - name: K3D_CONFIG
+      source: env
+      default: ./config/minimal-cluster.yaml
+- name: edgefarm-runtime-nodes
+  replace:
+    vars:
+    - name: K3D_CONFIG
+      source: env
+      default: ./config/edgefarm-runtime-nodes-cluster.yaml

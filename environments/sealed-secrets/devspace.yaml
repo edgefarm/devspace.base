@@ -1,0 +1,51 @@
+version: v1beta11
+
+vars:
+- name: SEALED_SECRETS_MASTER_KEY_FILE
+  source: env
+  default: ~/.devspace/sealed-secrets-master.key
+
+commands:
+
+- name: init
+  description: Initialize sealed-secret (including load of shared master key).
+  command: |-
+    devspace deploy --profile=internal-init --deployments=sealed-secrets --no-warn
+
+- name: backup-master-key
+  description: Takes a backup of the master key, which can then be shared in the devteam.
+  command: |-
+    mkdir -p ~/.devspace
+    kubectl get secret -n kube-system \
+      -l sealedsecrets.bitnami.com/sealed-secrets-key \
+      -o yaml >${SEALED_SECRETS_MASTER_KEY_FILE}
+
+- name: restore-master-key
+  description: Inserts the master key into the current cluster. (Called by init)
+  command: |-
+    kubectl apply -f ${SEALED_SECRETS_MASTER_KEY_FILE}
+    kubectl delete pod -n kube-system \
+      -l name=sealed-secrets-controller # trigger reinit
+
+hooks:
+
+- command: |-
+    until kubectl wait \
+      --for=condition=available deployment.apps/sealed-secrets-controller \
+      -n kube-system --timeout=120s; do sleep 2; done
+  os: darwin,linux
+  events: [ "after:deploy:sealed-secrets" ]
+
+deployments:
+- name: sealed-secrets
+  namespace: kube-system
+  kubectl:
+    manifests:
+    - https://github.com/bitnami-labs/sealed-secrets/releases/download/v0.16.0/controller.yaml
+
+profiles:
+- name: internal-init
+  merge:
+    hooks:
+      - command: "devspace run restore-master-key"
+        events: ["after:deploy:sealed-secrets"]

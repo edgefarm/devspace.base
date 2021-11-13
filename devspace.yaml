@@ -3,10 +3,10 @@ version: v1beta11
 dependencies:
 - name: k3d
   source:
-    path: ./k3d
+    path: ./environments/k3d
 - name: sealed-secrets
   source:
-    path: ./sealed-secrets
+    path: ./environments/sealed-secrets
 
 commands:
 - name: init
