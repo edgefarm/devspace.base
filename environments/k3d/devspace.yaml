@@ -44,5 +44,12 @@ commands:
     command: |-
       k3d cluster create ${K3D_CLUSTER_NAME} \
         --registry-use ${K3D_REGISTRY_NAME}:${K3D_REGISTRY_PORT} \
-        --config ${K3D_CONFIG}
+        --config ${K3D_CONFIG} --k3s-server-arg '--no-deploy=traefik'
       k3d kubeconfig merge ${K3D_CLUSTER_NAME} --output $HOME/.kube/config
+
+deployments:
+  - name: ingress-controller-nginx
+    namespace: kube-system
+    kubectl:
+      manifests:
+        - ./manifests/ingress-controller-nginx-helm.yaml
