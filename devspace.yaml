@@ -26,3 +26,12 @@ commands:
   - name: update
     command: |-
       devspace update dependencies
+
+profiles:
+  - name: test-ingress
+    merge:
+      deployments:
+        - name: simple-nginx
+          kubectl:
+            manifests:
+              - ./dev/manifests/simple-nginx

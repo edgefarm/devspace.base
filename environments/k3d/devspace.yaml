@@ -44,5 +44,5 @@ commands:
     command: |-
       k3d cluster create ${K3D_CLUSTER_NAME} \
         --registry-use ${K3D_REGISTRY_NAME}:${K3D_REGISTRY_PORT} \
-        --config ${K3D_CONFIG}
+        --config ${K3D_CONFIG} --api-port 6550 -p "8081:80@loadbalancer"
       k3d kubeconfig merge ${K3D_CLUSTER_NAME} --output $HOME/.kube/config
