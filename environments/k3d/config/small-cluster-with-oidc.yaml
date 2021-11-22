@@ -1,0 +1,50 @@
+# k3d configuration file, saved as e.g. /home/me/myk3dcluster.yaml
+apiVersion: k3d.io/v1alpha3 # this will change in the future as we make everything more stable
+kind: Simple # internally, we also have a Cluster config, which is not yet available externally
+name: edgefarm # name that you want to give to your cluster (will still be prefixed with `k3d-`)
+servers: 1 # same as `--servers 1`
+agents: 2 # same as `--agents 2`
+image: rancher/k3s:v1.20.4-k3s1 # same as `--image rancher/k3s:v1.20.4-k3s1`
+# volumes: # repeatable flags are represented as YAML lists
+#   - volume: /my/host/path:/path/in/node # same as `--volume '/my/host/path:/path/in/node@server:0;agent:*'`
+#     nodeFilters:
+#       - server:0
+#       - agent:*
+# ports:
+#   - port: 8080:80 # same as `--port '8080:80@loadbalancer'`
+#     nodeFilters:
+#       - loadbalancer
+#   - port: 8443:443 # same as `--port '8080:80@loadbalancer'`
+#     nodeFilters:
+#       - loadbalancer
+
+# registries:
+#   use:
+#     - registry.k3d.localhost:5000
+options:
+  k3s:
+    extraArgs:
+      - arg: --disable=traefik
+        nodeFilters:
+          - server:*
+      - arg: --kube-apiserver-arg=oidc-issuer-url=https://keycloak.local:8443/auth/realms/IAM
+        nodeFilters:
+          - server:*
+      - arg: --kube-apiserver-arg=oidc-client-id=kubernetes
+        nodeFilters:
+          - server:*
+      - arg: --kube-apiserver-arg=oidc-groups-claim=user_groups
+        nodeFilters:
+          - server:*
+      - arg: --kube-apiserver-arg=oidc-username-claim=preferred_username
+        nodeFilters:
+          - server:*
+      - arg: --kube-apiserver-arg=oidc-groups-prefix="oidc:"
+        nodeFilters:
+          - server:*
+      - arg: --kube-apiserver-arg=oidc-username-prefix="oidc:"
+        nodeFilters:
+          - server:*
+      # - arg: --kube-apiserver-arg=oidc-ca-file=/var/lib/kubernetes/keycloak.crt
+      #   nodeFilters:
+      #     - server:*
