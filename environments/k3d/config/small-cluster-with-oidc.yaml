@@ -1,0 +1,33 @@
+apiVersion: k3d.io/v1alpha3
+kind: Simple
+name: edgefarm
+servers: 1
+agents: 2
+image: rancher/k3s:v1.20.12-k3s1
+options:
+  k3s:
+    extraArgs:
+      - arg: --disable=traefik
+        nodeFilters:
+          - server:*
+      - arg: --kube-apiserver-arg=oidc-issuer-url=https://keycloak.local:8443/auth/realms/IAM
+        nodeFilters:
+          - server:*
+      - arg: --kube-apiserver-arg=oidc-client-id=kubernetes
+        nodeFilters:
+          - server:*
+      - arg: --kube-apiserver-arg=oidc-groups-claim=user_groups
+        nodeFilters:
+          - server:*
+      - arg: --kube-apiserver-arg=oidc-username-claim=preferred_username
+        nodeFilters:
+          - server:*
+      - arg: --kube-apiserver-arg=oidc-groups-prefix="oidc:"
+        nodeFilters:
+          - server:*
+      - arg: --kube-apiserver-arg=oidc-username-prefix="oidc:"
+        nodeFilters:
+          - server:*
+      # - arg: --kube-apiserver-arg=oidc-ca-file=/var/lib/kubernetes/keycloak.crt
+      #   nodeFilters:
+      #     - server:*
