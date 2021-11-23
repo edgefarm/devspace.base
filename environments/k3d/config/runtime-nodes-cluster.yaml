@@ -13,9 +13,9 @@ options:
 labels:
   - label: node-role.kubernetes.io/main-runtime=true
     nodeFilters:
-      - agent[0]
-      - agent[1]
+      - agent:0
+      - agent:1
   - label: node-role.kubernetes.io/edge-runtime=true
     nodeFilters:
-      - agent[2]
-      - agent[3]
+      - agent:2
+      - agent:3
