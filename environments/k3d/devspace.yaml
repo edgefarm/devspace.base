@@ -40,7 +40,6 @@ commands:
     command: |-
       devspace run internal-ensure-registry-exists
       devspace run internal-create-cluster
-      devspace run activate
   - name: internal-ensure-registry-exists
     description: Create registry, if not exists. (Do not use directly)
     command: |-
@@ -54,4 +53,5 @@ commands:
         --registry-use ${K3D_REGISTRY_NAME}:${K3D_REGISTRY_PORT} \
         --config ${K3D_CONFIG} --api-port ${K3D_API_HOST_PORT} -p "${K3D_HTTP_HOST_PORT}:80@loadbalancer"  -p "${K3D_HTTPS_HOST_PORT}:443@loadbalancer"
       k3d kubeconfig merge ${K3D_CLUSTER_NAME} --output $HOME/.kube/config
+      devspace run activate
       kubectl apply -f manifests/ingress-nginx
