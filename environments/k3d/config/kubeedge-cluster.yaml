@@ -10,6 +10,24 @@ options:
       - arg: --disable=traefik
         nodeFilters:
           - server:*
+      - arg: --kube-apiserver-arg=oidc-issuer-url=https://keycloak:8443/auth/realms/IAM
+        nodeFilters:
+          - server:*
+      - arg: --kube-apiserver-arg=oidc-client-id=kubernetes
+        nodeFilters:
+          - server:*
+      - arg: --kube-apiserver-arg=oidc-groups-claim=user_groups
+        nodeFilters:
+          - server:*
+      - arg: --kube-apiserver-arg=oidc-username-claim=preferred_username
+        nodeFilters:
+          - server:*
+      - arg: --kube-apiserver-arg=oidc-groups-prefix="oidc:"
+        nodeFilters:
+          - server:*
+      - arg: --kube-apiserver-arg=oidc-username-prefix="oidc:"
+        nodeFilters:
+          - server:*
 ports:
   - port: 10000:10000
     nodeFilters:
