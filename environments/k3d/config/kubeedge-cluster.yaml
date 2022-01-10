@@ -4,10 +4,35 @@ name: kubeedge-cluster
 servers: 1
 agents: 4
 image: rancher/k3s:v1.20.12-k3s1
+volumes:
+  - volume: /home/flo/.devspace/certs/dev/:/etc/self-ssl/
+    nodeFilters:
+      - server:*
 options:
   k3s:
     extraArgs:
       - arg: --disable=traefik
+        nodeFilters:
+          - server:*
+      - arg: --kube-apiserver-arg=oidc-issuer-url=https://host.k3d.internal:8443/auth/realms/IAM
+        nodeFilters:
+          - server:*
+      - arg: --kube-apiserver-arg=oidc-client-id=kubernetes
+        nodeFilters:
+          - server:*
+      - arg: --kube-apiserver-arg=oidc-groups-claim=user_groups
+        nodeFilters:
+          - server:*
+      - arg: --kube-apiserver-arg=oidc-username-claim=preferred_username
+        nodeFilters:
+          - server:*
+      - arg: "--kube-apiserver-arg=oidc-groups-prefix=oidc:"
+        nodeFilters:
+          - server:*
+      - arg: "--kube-apiserver-arg=oidc-username-prefix=oidc:"
+        nodeFilters:
+          - server:*
+      - arg: --kube-apiserver-arg=oidc-ca-file=/etc/self-ssl/rootCA.pem
         nodeFilters:
           - server:*
 ports:
