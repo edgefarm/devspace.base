@@ -26,10 +26,10 @@ options:
       - arg: --kube-apiserver-arg=oidc-username-claim=preferred_username
         nodeFilters:
           - server:*
-      - arg: --kube-apiserver-arg="oidc-groups-prefix=oidc:"
+      - arg: "--kube-apiserver-arg=oidc-groups-prefix=oidc:"
         nodeFilters:
           - server:*
-      - arg: --kube-apiserver-arg="oidc-username-prefix=oidc:"
+      - arg: "--kube-apiserver-arg=oidc-username-prefix=oidc:"
         nodeFilters:
           - server:*
       - arg: --kube-apiserver-arg=oidc-ca-file=/etc/self-ssl/rootCA.pem
