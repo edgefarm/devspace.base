@@ -10,7 +10,7 @@ options:
       - arg: --disable=traefik
         nodeFilters:
           - server:*
-      - arg: --kube-apiserver-arg=oidc-issuer-url=https://keycloak.svc.local:8443/auth/realms/IAM
+      - arg: --kube-apiserver-arg=oidc-issuer-url=https://host.k3d.internal:8443/auth/realms/IAM
         nodeFilters:
           - server:*
       - arg: --kube-apiserver-arg=oidc-client-id=kubernetes
