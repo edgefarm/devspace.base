@@ -32,7 +32,7 @@ options:
       - arg: --kube-apiserver-arg=oidc-username-prefix="oidc:"
         nodeFilters:
           - server:*
-      - arg: --kube-apiserver-arg=oidc-ca-file="/cert/rootCA.pem"
+      - arg: --kube-apiserver-arg=oidc-ca-file="/certs/rootCA.pem"
         nodeFilters:
           - server:*
 ports:
