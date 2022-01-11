@@ -5,7 +5,7 @@ servers: 1
 agents: 4
 image: rancher/k3s:v1.20.12-k3s1
 volumes:
-  - volume: ~/.devspace/certs/dev/:/certs
+  - volume: /home/flo/.devspace/certs/dev/:/certs
     nodeFilters:
       - server:*
 options:
