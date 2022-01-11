@@ -32,9 +32,9 @@ options:
       - arg: --kube-apiserver-arg=oidc-username-prefix="oidc:"
         nodeFilters:
           - server:*
-      - arg: --kube-apiserver-arg=oidc-ca-file=/etc/self-ssl/rootCA.pem"
-        nodeFilters:
-          - server:*
+      # - arg: --kube-apiserver-arg=oidc-ca-file=/etc/self-ssl/rootCA.pem"
+      #   nodeFilters:
+      #     - server:*
 ports:
   - port: 10000:10000
     nodeFilters:
