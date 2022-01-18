@@ -3,25 +3,12 @@ version: v1beta11
 vars:
   - name: K3D_CLUSTER_NAME
     source: env
-    default: devspace-base
   - name: K3D_CONFIG
     source: env
-    default: ./config/minimal-cluster.yaml
-  - name: K3D_REGISTRY_NAME
+  - name: K3D_EXTRA_ARGS
     source: env
-    default: registry.k3d.localhost
-  - name: K3D_REGISTRY_PORT
-    source: env
-    default: 5000
-  - name: K3D_HTTP_HOST_PORT
-    source: env
-    default: 8080
-  - name: K3D_HTTPS_HOST_PORT
-    source: env
-    default: 8443
-  - name: K3D_API_HOST_PORT
-    source: env
-    default: 6550
+    default: ""
+
 commands:
   - name: activate
     description: Configure environment to point to this cluster.
@@ -32,26 +19,23 @@ commands:
     description: Delete cluster resources (except container registry).
     command: |-
       k3d cluster delete ${K3D_CLUSTER_NAME}
-      kubectl config delete-context k3d-${K3D_CLUSTER_NAME}
-      kubectl config delete-cluster k3d-${K3D_CLUSTER_NAME}
-      kubectl config delete-user admin@k3d-${K3D_CLUSTER_NAME}
+      kubectl config delete-context k3d-${K3D_CLUSTER_NAME} 2>/dev/null || true
+      kubectl config delete-cluster k3d-${K3D_CLUSTER_NAME} 2>/dev/null || true
+      kubectl config delete-user admin@k3d-${K3D_CLUSTER_NAME} 2>/dev/null || true
   - name: init
     description: Setup registry, custer and activate environment.
     command: |-
+      k3d cluster create ${K3D_CLUSTER_NAME} --config ${K3D_CONFIG} ${K3D_EXTRA_ARGS}
+      export K3D_CLUSTER_NAME=${K3D_CLUSTER_NAME}
+      export K3D_CONFIG=${K3D_CONFIG}
       devspace run internal-ensure-registry-exists
       devspace run internal-create-cluster
   - name: internal-ensure-registry-exists
     description: Create registry, if not exists. (Do not use directly)
     command: |-
-      k3d registry create ${K3D_REGISTRY_NAME} \
-        --port ${K3D_REGISTRY_PORT} \
-        || true # ignore error's
+      k3d registry create registry.k3d.localhost --port 5000 2>/dev/null || true
   - name: internal-create-cluster
     description: Create registry, if not exists. (Do not use directly)
     command: |-
-      k3d cluster create ${K3D_CLUSTER_NAME} \
-        --registry-use ${K3D_REGISTRY_NAME}:${K3D_REGISTRY_PORT} \
-        --config ${K3D_CONFIG} --api-port ${K3D_API_HOST_PORT} -p "${K3D_HTTP_HOST_PORT}:80@loadbalancer"  -p "${K3D_HTTPS_HOST_PORT}:443@loadbalancer"
       k3d kubeconfig merge ${K3D_CLUSTER_NAME} --output $HOME/.kube/config
       devspace run activate
-      kubectl apply -f manifests/ingress-nginx

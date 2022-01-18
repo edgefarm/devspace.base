@@ -1,0 +1,34 @@
+version: v1beta11
+
+vars:
+  - name: CA_CERTS_DIR
+    command: echo $HOME/.devspace/certs/
+
+commands:
+  - name: "init"
+    command: |-
+      devspace run generate-ca
+
+  - name: "install"
+    command: |-
+      kubectl apply -f manifests/ingress-nginx
+      kubectl apply -k manifests/operators
+      echo -n "Waiting for cert-manager ready"
+      until kubectl wait --for=condition=available deployment/cert-manager -n operators --timeout=60s 2>/dev/null; do echo -n "." && sleep 2; done
+      until kubectl wait --for=condition=available deployment/cert-manager-cainjector -n operators --timeout=60s 2>/dev/null; do echo -n "." && sleep 2; done
+      until kubectl wait --for=condition=available deployment/cert-manager-webhook -n operators --timeout=60s 2>/dev/null; do echo -n "." && sleep 2; done
+      until kubectl wait --for=condition=established crd/certificates.cert-manager.io --timeout=60s 2>/dev/null; do echo -n "." && sleep 2; done
+      kubectl get secrets -n operators tls-ca-secret 2>/dev/null || \
+      kubectl -n operators create secret tls tls-ca-secret \
+        --key=${CA_CERTS_DIR}/rootCA-key.pem \
+        --cert=${CA_CERTS_DIR}/rootCA.pem
+      kubectl apply -f manifests/tls-ca
+      kubectl rollout status -w daemonset.apps/ingress-nginx-controller -n ingress-nginx
+
+  - name: "generate-ca"
+    command: |-
+      [ -d "${CA_CERTS_DIR}" ] || ( \
+        echo "Creating self-signed CA certificates for TLS and installing them in the local trust stores" \
+        && mkdir -p ${CA_CERTS_DIR} \
+        && CAROOT=${CA_CERTS_DIR} mkcert -install \
+      )

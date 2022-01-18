@@ -1,21 +1,24 @@
 apiVersion: k3d.io/v1alpha3
 kind: Simple
-name: runtime-node-cluster
+name: devspace-base
 servers: 1
-agents: 4
+agents: 1
+kubeAPI:
+  hostPort: "6550"
 image: rancher/k3s:v1.20.12-k3s1
+registries:
+  use:
+    - registry.k3d.localhost:5000
 options:
   k3s:
     extraArgs:
       - arg: --disable=traefik
         nodeFilters:
           - server:*
-labels:
-  - label: node-role.kubernetes.io/main-runtime=true
+ports:
+  - port: 8080:80
     nodeFilters:
-      - agent:0
-      - agent:1
-  - label: node-role.kubernetes.io/edge-runtime=true
+      - loadbalancer
+  - port: 8443:443
     nodeFilters:
-      - agent:2
-      - agent:3
+      - loadbalancer
