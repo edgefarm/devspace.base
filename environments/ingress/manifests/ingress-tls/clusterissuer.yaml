@@ -1,8 +1,8 @@
 apiVersion: cert-manager.io/v1
 kind: ClusterIssuer
 metadata:
-  name: tls-ca-issuer
+  name: ingress-tls-issuer
   namespace: edgefarm
 spec:
   ca:
-    secretName: tls-ca-secret
+    secretName: ingress-tls

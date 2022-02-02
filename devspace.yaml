@@ -26,9 +26,9 @@ dependencies:
     source:
       path: ./environments/ingress
 
-  - name: sealed-secrets
-    source:
-      path: ./environments/sealed-secrets
+  # - name: sealed-secrets
+  #   source:
+  #     path: ./environments/sealed-secrets
 
 commands:
   - name: init
@@ -36,7 +36,7 @@ commands:
       devspace run update
       devspace run k3d.init
       devspace run ingress.init
-      devspace run sealed-secrets.init
+      # devspace run sealed-secrets.init
 
   - name: purge
     command: |-
@@ -63,3 +63,4 @@ deployments:
     kubectl:
       manifests:
         - ./dev/manifests/hello-nginx-demo
+    namespace: edgefarm

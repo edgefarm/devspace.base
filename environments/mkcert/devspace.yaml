@@ -1,0 +1,27 @@
+version: v1beta11
+
+vars:
+  - name: CA_DIR
+    command: echo $HOME/.devspace/ca/
+
+commands:
+  - name: init-ca
+    command: CA_DIR=${CA_DIR} ./hack/init-ca.sh $@
+
+  - name: purge-ca
+    command: CA_DIR=${CA_DIR} ./hack/purge-ca.sh $@
+
+  - name: install-ca
+    command: CA_DIR=${CA_DIR} ./hack/install-ca.sh $@
+
+  - name: create-ca-secret
+    command: CA_DIR=${CA_DIR} ./hack/create-ca-secret.sh $@
+
+  - name: uninstall-ca
+    command: CA_DIR=${CA_DIR} ./hack/uninstall-ca.sh $@
+
+  - name: create-cert
+    command: CA_DIR=${CA_DIR} ./hack/create-cert.sh $@
+
+  - name: create-client-cert
+    command: CA_DIR=${CA_DIR} ./hack/create-client-cert.sh $@

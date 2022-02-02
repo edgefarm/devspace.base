@@ -1,0 +1,19 @@
+name: Create Release
+on:
+  pull_request:
+    branches:
+      - "**"
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: go-semantic-release/action@v1
+        id: semrel
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          allow-initial-development-versions: true
+          dry: true
+          changelog-generator-opt: "emojis=true"
+          # changelog-file: CHANGELOG.md
