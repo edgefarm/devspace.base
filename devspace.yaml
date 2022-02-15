@@ -26,10 +26,6 @@ dependencies:
     source:
       path: ./environments/ingress
 
-  # - name: sealed-secrets
-  #   source:
-  #     path: ./environments/sealed-secrets
-
 commands:
   - name: init
     command: |-

@@ -4,7 +4,7 @@ Collection of devspace-based environments for reusable tasks.
 
 ## how to use
 
-the environments folder contains devspace definitions for components
+the `environments` folder contains devspace definitions for components
 recurring in edgefarm development. These environments allow you to quickly
 and easily create the resources you need. Detailed information can also be
 found in these folders in the corresponding `README.md` files.
