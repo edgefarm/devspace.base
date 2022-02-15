@@ -1,0 +1,36 @@
+version: v1beta11
+
+vars:
+  - name: CA_NAME
+    value: ingress-tls
+  - name: CA_SECRET
+    value: ingress-tls
+  - name: CA_SECRET_NS
+    value: cert-manager
+
+dependencies:
+  - name: mkcert
+    source:
+      git: https://github.com/edgefarm/devspace.base
+      subPath: /environments/mkcert
+      branch: base-dependencies
+
+commands:
+  - name: "init"
+    command: |-
+      devspace run mkcert.init-ca ${CA_NAME}
+      devspace run mkcert.install-ca ${CA_NAME}
+      kubectl create ns ${CA_SECRET_NS} || true
+      devspace run mkcert.create-ca-secret ${CA_NAME} ${CA_SECRET} ${CA_SECRET_NS}
+
+  - name: "install"
+    command: |-
+      kubectl apply -f manifests/ingress-nginx
+      kubectl apply -k manifests/operators
+      echo -n "Waiting for cert-manager ready"
+      until kubectl wait --for=condition=available deployment/cert-manager -n cert-manager --timeout=60s 2>/dev/null; do echo -n "." && sleep 2; done
+      until kubectl wait --for=condition=available deployment/cert-manager-cainjector -n cert-manager --timeout=60s 2>/dev/null; do echo -n "." && sleep 2; done
+      until kubectl wait --for=condition=available deployment/cert-manager-webhook -n cert-manager --timeout=60s 2>/dev/null; do echo -n "." && sleep 2; done
+      until kubectl wait --for=condition=established crd/certificates.cert-manager.io --timeout=60s 2>/dev/null; do echo -n "." && sleep 2; done
+      kubectl apply -f manifests/ingress-tls
+      kubectl rollout status -w daemonset.apps/ingress-nginx-controller -n ingress-nginx

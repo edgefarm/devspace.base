@@ -1,0 +1,12 @@
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: hello-nginx-tls-certificate
+  namespace: edgefarm
+spec:
+  secretName: hello-nginx-tls-secret
+  dnsNames:
+    - hello-nginx
+  issuerRef:
+    name: ingress-tls-issuer
+    kind: ClusterIssuer

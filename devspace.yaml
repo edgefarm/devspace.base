@@ -1,19 +1,38 @@
 version: v1beta11
 
+vars:
+  - name: K3D_CLUSTER_NAME
+    value: devspace-base
+  - name: K3D_CONFIG
+    command: echo $(pwd)/dev/k3d-config.yaml
+
 dependencies:
   - name: k3d
     source:
       path: ./environments/k3d
-  - name: sealed-secrets
+    vars:
+      - name: K3D_CLUSTER_NAME
+        value: ${K3D_CLUSTER_NAME}
+      - name: K3D_CONFIG
+        value: ${K3D_CONFIG}
+      - name: K3D_EXTRA_ARGS
+        value: ""
+
+  - name: olm
     source:
-      path: ./environments/sealed-secrets
+      path: ./environments/olm
+
+  - name: ingress
+    source:
+      path: ./environments/ingress
 
 commands:
   - name: init
     command: |-
       devspace run update
       devspace run k3d.init
-      devspace run sealed-secrets.init
+      devspace run ingress.init
+      # devspace run sealed-secrets.init
 
   - name: purge
     command: |-
@@ -27,11 +46,17 @@ commands:
     command: |-
       devspace update dependencies
 
-profiles:
-  - name: test-ingress
-    merge:
-      deployments:
-        - name: simple-nginx
-          kubectl:
-            manifests:
-              - ./dev/manifests/simple-nginx
+hooks:
+  - name: "install-dependencies"
+    command: |-
+      devspace run olm.install
+      devspace run ingress.install
+    events:
+      - "before:deploy"
+
+deployments:
+  - name: hello-nginx-demo
+    kubectl:
+      manifests:
+        - ./dev/manifests/hello-nginx-demo
+    namespace: edgefarm
