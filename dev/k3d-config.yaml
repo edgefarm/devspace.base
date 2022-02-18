@@ -4,7 +4,7 @@ name: devspace-base
 servers: 1
 agents: 1
 kubeAPI:
-  hostPort: "56550"
+  hostPort: "16550"
 image: rancher/k3s:v1.20.12-k3s1
 registries:
   use:
@@ -16,9 +16,9 @@ options:
         nodeFilters:
           - server:*
 ports:
-  - port: 50080:80
+  - port: 10080:80
     nodeFilters:
       - loadbalancer
-  - port: 50443:443
+  - port: 10443:443
     nodeFilters:
       - loadbalancer

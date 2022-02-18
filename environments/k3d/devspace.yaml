@@ -13,18 +13,24 @@ commands:
   - name: activate
     description: Configure environment to point to this cluster.
     command: |-
+      #!/bin/bash
+      set -e
       kubectl config use-context k3d-${K3D_CLUSTER_NAME}
       kubectl config set-context --current --namespace ${K3D_CLUSTER_NAME}
   - name: purge
     description: Delete cluster resources (except container registry).
     command: |-
-      k3d cluster delete ${K3D_CLUSTER_NAME}
-      kubectl config delete-context k3d-${K3D_CLUSTER_NAME} 2>/dev/null || true
-      kubectl config delete-cluster k3d-${K3D_CLUSTER_NAME} 2>/dev/null || true
-      kubectl config delete-user admin@k3d-${K3D_CLUSTER_NAME} 2>/dev/null || true
+      #!/bin/bash
+       set -e
+       k3d cluster delete ${K3D_CLUSTER_NAME}
+       kubectl config delete-context k3d-${K3D_CLUSTER_NAME} 2>/dev/null || true
+       kubectl config delete-cluster k3d-${K3D_CLUSTER_NAME} 2>/dev/null || true
+       kubectl config delete-user admin@k3d-${K3D_CLUSTER_NAME} 2>/dev/null || true
   - name: init
     description: Setup registry, custer and activate environment.
     command: |-
+      #!/bin/bash
+      set -e
       k3d cluster create ${K3D_CLUSTER_NAME} --config ${K3D_CONFIG} ${K3D_EXTRA_ARGS}
       export K3D_CLUSTER_NAME=${K3D_CLUSTER_NAME}
       export K3D_CONFIG=${K3D_CONFIG}
@@ -33,9 +39,13 @@ commands:
   - name: internal-ensure-registry-exists
     description: Create registry, if not exists. (Do not use directly)
     command: |-
+      #!/bin/bash
+      set -e
       k3d registry create registry.k3d.localhost --port 5000 2>/dev/null || true
   - name: internal-create-cluster
     description: Create registry, if not exists. (Do not use directly)
     command: |-
+      #!/bin/bash
+      set -e
       k3d kubeconfig merge ${K3D_CLUSTER_NAME} --output $HOME/.kube/config
       devspace run activate
