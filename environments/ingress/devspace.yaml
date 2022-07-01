@@ -18,6 +18,8 @@ dependencies:
 commands:
   - name: "init"
     command: |-
+      #!/bin/bash
+      set -e
       devspace run mkcert.init-ca ${CA_NAME}
       devspace run mkcert.install-ca ${CA_NAME}
       kubectl create ns ${CA_SECRET_NS} || true
@@ -25,9 +27,11 @@ commands:
 
   - name: "install"
     command: |-
+      #!/bin/bash
+      set -e
       kubectl apply -f manifests/ingress-nginx
       kubectl apply -k manifests/operators
-      echo -n "Waiting for cert-manager ready"
+      echo -n "Waiting until cert-manager is ready"
       until kubectl wait --for=condition=available deployment/cert-manager -n cert-manager --timeout=60s 2>/dev/null; do echo -n "." && sleep 2; done
       until kubectl wait --for=condition=available deployment/cert-manager-cainjector -n cert-manager --timeout=60s 2>/dev/null; do echo -n "." && sleep 2; done
       until kubectl wait --for=condition=available deployment/cert-manager-webhook -n cert-manager --timeout=60s 2>/dev/null; do echo -n "." && sleep 2; done

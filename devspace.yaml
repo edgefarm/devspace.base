@@ -29,6 +29,8 @@ dependencies:
 commands:
   - name: init
     command: |-
+      #!/usr/bin/env bash
+      set -e
       devspace run update
       devspace run k3d.init
       devspace run ingress.init
@@ -36,19 +38,27 @@ commands:
 
   - name: purge
     command: |-
+      #!/usr/bin/env bash
+      set -e
       devspace run k3d.purge
 
   - name: activate
     command: |-
+      #!/usr/bin/env bash
+      set -e
       devspace run k3d.activate
 
   - name: update
     command: |-
+      #!/usr/bin/env bash
+      set -e
       devspace update dependencies
 
 hooks:
   - name: "install-dependencies"
     command: |-
+      #!/usr/bin/env bash
+      set -e
       devspace run olm.install
       devspace run ingress.install
     events:

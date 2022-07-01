@@ -3,4 +3,6 @@ version: v1beta11
 commands:
   - name: "install"
     command: |-
+      #!/usr/bin/env bash
+      set -e
       curl -L https://github.com/operator-framework/operator-lifecycle-manager/releases/download/v0.19.1/install.sh | bash -s -- v0.18.3 || true # ignore error's

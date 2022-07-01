@@ -1,4 +1,5 @@
 #!/usr/bin/env bash
+set -e
 
 if [ "$#" -ne 3 ]; then
     echo "Illegal number of parameters"
