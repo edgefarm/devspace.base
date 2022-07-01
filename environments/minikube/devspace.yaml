@@ -1,0 +1,26 @@
+version: v1beta11
+
+vars:
+  - name: MINIKUBE_CLUSTER_NAME
+    source: env
+  - name: MINIKUBE_EXTRA_ARGS
+    source: env
+    default: ""
+
+commands:
+  - name: activate
+    description: Configure environment to point to this cluster.
+    command: |-
+      kubectl config use-context ${MINIKUBE_CLUSTER_NAME}
+      kubectl config set-context --current --namespace ${MINIKUBE_CLUSTER_NAME}
+
+  - name: purge
+    description: Delete cluster resources (except container registry).
+    command: |-
+      minikube delete -p ${MINIKUBE_CLUSTER_NAME}
+      rm ~/.kube/config-${MINIKUBE_CLUSTER_NAME}
+
+  - name: init
+    description: Setup registry, custer and activate environment.
+    command: |-
+      minikube start -p ${MINIKUBE_CLUSTER_NAME} ${MINIKUBE_EXTRA_ARGS}

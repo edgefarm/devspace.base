@@ -1,0 +1,32 @@
+version: v1beta11
+
+vars:
+  - name: KIND_CLUSTER_NAME
+    source: env
+  - name: KIND_CONFIG
+    source: env
+  - name: KIND_CLUSTER_VERSION
+    source: env
+    default: "v1.21.12"
+
+commands:
+  - name: activate
+    description: Configure environment to point to this cluster.
+    command: |-
+      kubectl config use-context kind-${KIND_CLUSTER_NAME}
+      kubectl config set-context --current --namespace ${KIND_CLUSTER_NAME}
+  - name: purge
+    description: Delete cluster resources.
+    command: |-
+      kind delete cluster --name ${KIND_CLUSTER_NAME}
+      kubectl config delete-context kind-${KIND_CLUSTER_NAME} 2>/dev/null || true
+      kubectl config delete-cluster kind-${KIND_CLUSTER_NAME} 2>/dev/null || true
+      kubectl config delete-user kind-${KIND_CLUSTER_NAME} 2>/dev/null || true
+  - name: init
+    description: Setup registry, custer and activate environment.
+    command: |-
+      set -e
+      kind create cluster --name ${KIND_CLUSTER_NAME} --image kindest/node:${KIND_CLUSTER_VERSION} --config ${KIND_CONFIG}
+      export KIND_CLUSTER_NAME=${KIND_CLUSTER_NAME}
+      export KIND_CONFIG=${KIND_CONFIG}
+      devspace run activate
