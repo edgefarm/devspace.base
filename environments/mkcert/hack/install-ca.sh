@@ -1,10 +1,12 @@
 #!/usr/bin/env bash
 set -e
+set -u
 
-if [ "$#" -ne 1 ]; then
+if [ "$#" -ne 0 ]; then
     echo "Illegal number of parameters"
-    echo "install-ca <ca_name>"
+    echo "install-ca"
     exit
 fi
 
-CAROOT=${CA_DIR}/$1 mkcert -install
+echo "installing ${CAROOT}"
+mkcert -install

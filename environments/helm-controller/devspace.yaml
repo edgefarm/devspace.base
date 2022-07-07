@@ -1,7 +1,0 @@
-version: v1beta11
-
-commands:
-  - name: "install"
-    command: |-
-      kubectl apply -f manifests/deploy-namespaced.yaml
-      until kubectl wait --for=condition=available deployment/helm-controller -n kube-system --timeout=60s 2>/dev/null; do echo -n "." && sleep 2; done
