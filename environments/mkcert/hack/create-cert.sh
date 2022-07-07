@@ -1,10 +1,11 @@
 #!/usr/bin/env bash
 set -e
+set -u
 
-if ! [ "$#" -gt 2 ]; then
+if ! [ "$#" -gt 1 ]; then
     echo "Illegal number of parameters"
-    echo "create-certificate <ca_name> <mk_cert_params>"
+    echo "create-certificate <mk_cert_params>"
     exit
 fi
 
-CAROOT=${CA_DIR}/$1 mkcert ${@:2}
+mkcert ${@:2}

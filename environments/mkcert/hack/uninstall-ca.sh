@@ -1,10 +1,12 @@
 #!/usr/bin/env bash
 set -e
+set -u
 
-if [ "$#" -ne 1 ]; then
+if [ "$#" -ne 0 ]; then
     echo "Illegal number of parameters"
-    echo "uninstall-ca <ca_name>"
+    echo "uninstall-ca"
     exit
 fi
 
-CAROOT=${CA_DIR}/$1 mkcert -uninstall
+echo "uninstalling ${CAROOT}"
+mkcert -uninstall

@@ -1,14 +1,17 @@
 #!/usr/bin/env bash
 set -e
+set -u
 
-if [ "$#" -ne 1 ]; then
+if [ "$#" -ne 0 ]; then
     echo "Illegal number of parameters"
-    echo "init-ca <ca_name>"
+    echo "init-ca"
     exit
 fi
 
-if ! [ -d "${CA_DIR}/$1" ]; then
-    echo "Creating self-signed CA $1"
-    mkdir -p ${CA_DIR}/$1
-    CAROOT=${CA_DIR}/$1 mkcert 2>/dev/null
+if ! [ -d "${CAROOT}" ]; then
+    echo "Creating self-signed CA ${CAROOT}"
+    mkdir -p ${CAROOT}
+    # mkcert 2>/dev/null
+else
+    echo "CA ${CAROOT} already exists."
 fi

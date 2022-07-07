@@ -1,27 +1,41 @@
 version: v1beta11
 
 vars:
-  - name: CA_DIR
+  - name: CAROOT
     command: echo $HOME/.devspace/ca/
 
 commands:
   - name: init-ca
-    command: CA_DIR=${CA_DIR} ./hack/init-ca.sh $@
+    command: |
+      export CAROOT=${CAROOT}
+      ./hack/init-ca.sh $@
 
   - name: purge-ca
-    command: CA_DIR=${CA_DIR} ./hack/purge-ca.sh $@
+    command: |
+      export CAROOT=${CAROOT}
+      ./hack/purge-ca.sh $@
 
   - name: install-ca
-    command: CA_DIR=${CA_DIR} ./hack/install-ca.sh $@
+    command: |
+      export CAROOT=${CAROOT}
+      ./hack/install-ca.sh $@
 
   - name: create-ca-secret
-    command: CA_DIR=${CA_DIR} ./hack/create-ca-secret.sh $@
+    command: |
+      export CAROOT=${CAROOT}
+      ./hack/create-ca-secret.sh $@
 
   - name: uninstall-ca
-    command: CA_DIR=${CA_DIR} ./hack/uninstall-ca.sh $@
+    command: |
+      export CAROOT=${CAROOT}
+      ./hack/uninstall-ca.sh $@
 
   - name: create-cert
-    command: CA_DIR=${CA_DIR} ./hack/create-cert.sh $@
+    command: |
+      export CAROOT=${CAROOT}
+      ./hack/create-cert.sh $@
 
   - name: create-client-cert
-    command: CA_DIR=${CA_DIR} ./hack/create-client-cert.sh $@
+    command: |
+      export CAROOT=${CAROOT}
+      ./hack/create-client-cert.sh $@
