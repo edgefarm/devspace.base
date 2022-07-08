@@ -7,6 +7,9 @@ commands:
   - name: init
     command: |
       kubectl apply -f https://github.com/cert-manager/cert-manager/releases/download/v1.8.2/cert-manager.yaml
+
+  - name: wait
+    command: |
       until kubectl wait --for=condition=available deployment/cert-manager -n cert-manager --timeout=60s 2>/dev/null; do echo -n "." && sleep 2; done
       until kubectl wait --for=condition=available deployment/cert-manager-cainjector -n cert-manager --timeout=60s 2>/dev/null; do echo -n "." && sleep 2; done
       until kubectl wait --for=condition=available deployment/cert-manager-webhook -n cert-manager --timeout=60s 2>/dev/null; do echo -n "." && sleep 2; done
