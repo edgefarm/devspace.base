@@ -7,5 +7,8 @@ commands:
   - name: init
     command: |
       kubectl apply -f https://raw.githubusercontent.com/kubernetes/ingress-nginx/main/deploy/static/provider/kind/deploy.yaml
+
+  - name: wait
+    command: |
       echo -n "Wait until ingress-nginx is ready "
       until kubectl wait --for=condition=ready pod --selector=app.kubernetes.io/component=controller -n ingress-nginx --timeout=60s 2>/dev/null; do echo -n "." && sleep 2; done
