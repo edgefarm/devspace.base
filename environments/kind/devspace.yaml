@@ -27,6 +27,8 @@ commands:
     command: |-
       set -e
       kind create cluster --name ${KIND_CLUSTER_NAME} --image kindest/node:${KIND_CLUSTER_VERSION} --config ${KIND_CONFIG}
+      # remove taint `node-role.kubernetes.io/master:NoSchedule` from all control-plane nodes
+      kubectl taint nodes -l node-role.kubernetes.io/control-plane= node-role.kubernetes.io/master:NoSchedule-
       export KIND_CLUSTER_NAME=${KIND_CLUSTER_NAME}
       export KIND_CONFIG=${KIND_CONFIG}
       devspace run activate
