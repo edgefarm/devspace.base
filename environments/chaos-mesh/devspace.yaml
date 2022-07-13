@@ -1,0 +1,21 @@
+version: v1beta11
+
+require:
+  devspace: '>= 5.0, < 6.0'
+
+commands:
+  - name: start
+    command: |
+      helm repo add chaos-mesh https://charts.chaos-mesh.org
+      helm install chaos-mesh --create-namespace -n chaos-testing chaos-mesh/chaos-mesh --set chaosDaemon.runtime=containerd --set chaosDaemon.socketPath=/run/containerd/containerd.sock --version 2.2.2
+
+  - name: stop
+    command: |
+      helm uninstall chaos-testing
+
+  # - name: wait
+  #   command: |
+  #     until kubectl wait --for=condition=available deployment/cert-manager -n cert-manager --timeout=60s 2>/dev/null; do echo -n "." && sleep 2; done
+  #     until kubectl wait --for=condition=available deployment/cert-manager-cainjector -n cert-manager --timeout=60s 2>/dev/null; do echo -n "." && sleep 2; done
+  #     until kubectl wait --for=condition=available deployment/cert-manager-webhook -n cert-manager --timeout=60s 2>/dev/null; do echo -n "." && sleep 2; done
+  #     until kubectl wait --for=condition=established crd/certificates.cert-manager.io --timeout=60s 2>/dev/null; do echo -n "." && sleep 2; done
