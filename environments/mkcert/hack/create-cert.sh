@@ -5,7 +5,7 @@ set -u
 if ! [ "$#" -gt 1 ]; then
     echo "Illegal number of parameters"
     echo "create-certificate <mk_cert_params>"
-    exit
+    exit 1
 fi
 
-mkcert ${@:2}
+mkcert ${@:1} || true

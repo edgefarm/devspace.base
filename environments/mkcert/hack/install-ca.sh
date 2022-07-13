@@ -5,8 +5,8 @@ set -u
 if [ "$#" -ne 0 ]; then
     echo "Illegal number of parameters"
     echo "install-ca"
-    exit
+    exit 1
 fi
 
 echo "installing ${CAROOT}"
-mkcert -install
+mkcert -install || true
