@@ -11,7 +11,7 @@ fi
 if ! [ -d "${CAROOT}" ]; then
     echo "Creating self-signed CA ${CAROOT}"
     mkdir -p ${CAROOT}
-    # mkcert 2>/dev/null
+    mkcert || true #2>/dev/null
 else
     echo "CA ${CAROOT} already exists."
 fi
