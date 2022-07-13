@@ -27,8 +27,17 @@ commands:
     command: |-
       set -e
       kind create cluster --name ${KIND_CLUSTER_NAME} --image kindest/node:${KIND_CLUSTER_VERSION} --config ${KIND_CONFIG}
+
       # remove taint `node-role.kubernetes.io/master:NoSchedule` from all control-plane nodes
       kubectl taint nodes -l node-role.kubernetes.io/control-plane= node-role.kubernetes.io/master:NoSchedule-
+
+      # TODO: this doesn't work as expected, network still crashes, not all daemonsets.apps are scheduled
+      # needed to be reworked - maybe exchange kindnet with cannel etc..
+      #
+      # remove toleration * from kindnet to prevent scheduling on edge nodes
+      # kubectl patch daemonsets.apps -n kube-system kindnet --type=json -p='[{"op": "remove", "path": "/spec/template/spec/tolerations" }]'
+      # kubectl patch daemonsets.apps -n kube-system kube-proxy --type=json -p='[{"op": "remove", "path": "/spec/template/spec/tolerations/1" }]'
+
       export KIND_CLUSTER_NAME=${KIND_CLUSTER_NAME}
       export KIND_CONFIG=${KIND_CONFIG}
       devspace run activate
